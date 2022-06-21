@@ -1,10 +1,11 @@
-console.log(gameRound())
-// Randomly select from rock, paper and scissors
+const playerSelection = 'rock';
+console.log(game());
 
-function playerPlay() {
-    let playerChoice = prompt('Rock, paper or scissors?');
-    return playerChoice.toLowerCase();
-}
+// function playerPlay() {
+//     let playerChoice = prompt('Rock, paper or scissors?');
+//     return playerChoice.toLowerCase();
+// }
+// Randomly select from rock, paper and scissors
 
 function computerPlay() {
     let choices = ['rock', 'paper', 'scissors'];
@@ -14,12 +15,12 @@ function computerPlay() {
 
 function gameRound() {
     let computerSelection = computerPlay();
-    let playerSelection = playerPlay();
+    //let playerSelection = playerPlay();
     console.log(`Comp: ${computerSelection}`)
     console.log(`Player: ${playerSelection}`)
 
     if (playerSelection === computerSelection) {
-        return `${playerSelection} vs ${computerSelection}? You tied!`;
+        return `You tied! ${playerSelection} vs ${computerSelection}`;
     }
     else if (playerSelection === 'rock' && computerSelection === 'scissors' ||
             playerSelection === 'paper' && computerSelection === 'rock' ||
@@ -29,7 +30,7 @@ function gameRound() {
     else if (playerSelection === 'scissors' && computerSelection === 'rock' ||
             playerSelection === 'rock' && computerSelection === 'paper' ||
             playerSelection === 'paper' && computerSelection === 'scissors') {
-        return `You lse! ${computerSelection} beats ${playerSelection}!`;
+        return `You lose! ${computerSelection} beats ${playerSelection}!`;
     } 
     else {
         return `You input ${playerSelection},
@@ -37,3 +38,34 @@ function gameRound() {
     } 
 }
 
+function game() {
+    let playerScore = 0;
+    let computerScore = 0;
+    let winner = '';
+
+
+    for (i = 0; i < 5; i++) {
+        let round = gameRound();
+        result = round.split(' ')[1]
+        console.log(result)
+        if (result === 'win!') {
+            playerScore = playerScore + 1;
+        }
+        else if (result === 'lose!'){
+            computerScore = computerScore +1;
+        }
+        console.log(`Round: ${i + 1}`);
+        console.log(round);
+    }
+    if (playerScore === computerScore) {
+        winner = 'You tied!';
+    }
+    else if (playerScore > computerScore) {
+        winner = 'You won!'
+    }
+    else {
+        winner = 'You lost!'
+    }
+    let score = `Player: ${playerScore} Computer: ${computerScore}.`;
+    return `${winner} ${score}`
+}
