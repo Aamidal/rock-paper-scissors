@@ -1,36 +1,50 @@
-const playerSelection = 'rock';
+//const playerSelection = 'rock';
+const choices = ['rock', 'paper', 'scissors'];
+
 console.log(game());
 
-// function playerPlay() {
-//     let playerChoice = prompt('Rock, paper or scissors?');
-//     return playerChoice.toLowerCase();
-// }
-// Randomly select from rock, paper and scissors
+// Get player choice
+function playerPlay() {
+    let playerChoice = ''
+    while (playerChoice === '') {
+        playerInput = prompt('Rock, paper or scissors?').toLowerCase();
+        if (choices.includes(playerInput)) {
+            playerChoice = playerInput;
+        }
+        else {
+            console.log('Invalid input, try again.');
+        }
+    }
+    return playerChoice;
+}
 
+// Randomly select from rock, paper and scissors
 function computerPlay() {
-    let choices = ['rock', 'paper', 'scissors'];
     let choice = Math.floor(Math.random() * choices.length);
     return choices[choice]
 }
 
 function gameRound() {
     let computerSelection = computerPlay();
-    //let playerSelection = playerPlay();
-    console.log(`Comp: ${computerSelection}`)
-    console.log(`Player: ${playerSelection}`)
-
+    let playerSelection = playerPlay();
     if (playerSelection === computerSelection) {
-        return `You tied! ${playerSelection} vs ${computerSelection}`;
+        console.log(`Round result: Tie! 
+        (${playerSelection} vs ${computerSelection})`);
+        return 'tie';
     }
     else if (playerSelection === 'rock' && computerSelection === 'scissors' ||
             playerSelection === 'paper' && computerSelection === 'rock' ||
             playerSelection === 'scissors' && computerSelection === 'paper') {
-        return `You win! ${playerSelection} beats ${computerSelection}!`;
+        console.log(`Round Result: Win! 
+        (${playerSelection} beats ${computerSelection}!)`);
+        return 'win';
     }
     else if (playerSelection === 'scissors' && computerSelection === 'rock' ||
             playerSelection === 'rock' && computerSelection === 'paper' ||
             playerSelection === 'paper' && computerSelection === 'scissors') {
-        return `You lose! ${computerSelection} beats ${playerSelection}!`;
+        console.log(`Round Result: Lose! 
+        (${computerSelection} beats ${playerSelection}!)`);
+        return 'lose';
     } 
     else {
         return `You input ${playerSelection},
@@ -45,17 +59,14 @@ function game() {
 
 
     for (i = 0; i < 5; i++) {
-        let round = gameRound();
-        result = round.split(' ')[1]
-        console.log(result)
-        if (result === 'win!') {
+        console.log(`Round: ${i + 1} Current Score: ${playerScore}-${computerScore}`);
+        let result = gameRound();
+        if (result === 'win') {
             playerScore = playerScore + 1;
         }
-        else if (result === 'lose!'){
+        else if (result === 'lose'){
             computerScore = computerScore +1;
         }
-        console.log(`Round: ${i + 1}`);
-        console.log(round);
     }
     if (playerScore === computerScore) {
         winner = 'You tied!';
@@ -66,6 +77,6 @@ function game() {
     else {
         winner = 'You lost!'
     }
-    let score = `Player: ${playerScore} Computer: ${computerScore}.`;
+    let score = `Final Score: Player: ${playerScore} Computer: ${computerScore}.`;
     return `${winner} ${score}`
 }
