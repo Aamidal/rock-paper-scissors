@@ -27,7 +27,7 @@ function displayResults(result, pChoice, cChoice) {
         currentScore.textContent = 
         `Current Score: ${score.player} - ${score.computer}`;
     }
-    else if (score.player = 5) {
+    else if (score.player = 5 && score.computer < 5) {
         roundResult.innerHTML = outcomes['matchwon'];
         results.appendChild(roundResult);
         ++score.GamesWon;
