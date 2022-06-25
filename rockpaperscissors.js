@@ -1,82 +1,80 @@
-//const playerSelection = 'rock';
-const choices = ['rock', 'paper', 'scissors'];
-
-console.log(game());
-
-// Get player choice
-function playerPlay() {
-    let playerChoice = ''
-    while (playerChoice === '') {
-        playerInput = prompt('Rock, paper or scissors?').toLowerCase();
-        if (choices.includes(playerInput)) {
-            playerChoice = playerInput;
-        }
-        else {
-            console.log('Invalid input, try again.');
-        }
-    }
-    return playerChoice;
+const score = {
+    player: 0,
+    computer: 0,
+    GamesWon: 0,
+    GamesLost: 0,
 }
+const buttons = document.querySelectorAll('button');
+const results = document.getElementById('results');
+const currentScore = document.getElementById('currentScore');
+const history = document.getElementById('history');
 
-// Randomly select from rock, paper and scissors
-function computerPlay() {
-    let choice = Math.floor(Math.random() * choices.length);
-    return choices[choice]
-}
+currentScore.textContent = `Current Score: ${score.player}-${score.computer}`
 
-function gameRound() {
-    let computerSelection = computerPlay();
-    let playerSelection = playerPlay();
-    if (playerSelection === computerSelection) {
-        console.log(`Round result: Tie! 
-        (${playerSelection} vs ${computerSelection})`);
-        return 'tie';
+function displayResults(result, pChoice, cChoice) {
+    let roundResult = document.createElement('h3');
+    let choices = document.createElement('p');
+    let outcomes = {
+        'win': 'You won the round!',
+        'loss': 'You lost the round!',
+        'tie': 'You tied the round!',
+        'matchwon': "You were the first to five! You WIN!",
+        'matchlost': "The computer was the first to five! You LOSE!"
     }
-    else if (playerSelection === 'rock' && computerSelection === 'scissors' ||
-            playerSelection === 'paper' && computerSelection === 'rock' ||
-            playerSelection === 'scissors' && computerSelection === 'paper') {
-        console.log(`Round Result: Win! 
-        (${playerSelection} beats ${computerSelection}!)`);
-        return 'win';
+    if (score.player < 5 && score.computer < 5) {
+        roundResult.innerHTML = outcomes[result];
+        results.appendChild(roundResult)
+        currentScore.textContent = 
+        `Current Score: ${score.player} - ${score.computer}`;
     }
-    else if (playerSelection === 'scissors' && computerSelection === 'rock' ||
-            playerSelection === 'rock' && computerSelection === 'paper' ||
-            playerSelection === 'paper' && computerSelection === 'scissors') {
-        console.log(`Round Result: Lose! 
-        (${computerSelection} beats ${playerSelection}!)`);
-        return 'lose';
-    } 
-    else {
-        return `You input ${playerSelection},
-        which is not rock, paper or scissors`
-    } 
-}
-
-function game() {
-    let playerScore = 0;
-    let computerScore = 0;
-    let winner = '';
-
-
-    for (i = 0; i < 5; i++) {
-        console.log(`Round: ${i + 1} Current Score: ${playerScore}-${computerScore}`);
-        let result = gameRound();
-        if (result === 'win') {
-            playerScore = playerScore + 1;
-        }
-        else if (result === 'lose'){
-            computerScore = computerScore +1;
-        }
-    }
-    if (playerScore === computerScore) {
-        winner = 'You tied!';
-    }
-    else if (playerScore > computerScore) {
-        winner = 'You won!'
+    else if (score.player = 5) {
+        roundResult.innerHTML = outcomes['matchwon'];
+        results.appendChild(roundResult);
+        ++score.GamesWon;
+        history.textContent =
+                 `Games won: ${score.GamesWon} Games lost: ${score.GamesLost}`;
+        score.player = 0;
+        score.computer = 0;
+        currentScore.textContent = 
+        `Current Score: ${score.player} - ${score.computer}`;
     }
     else {
-        winner = 'You lost!'
+        roundResult.innerHTML = outcomes['matchlost'];
+        results.appendChild(roundResult);
+        ++score.GamesLost;
+        history.textContent =
+                 `Games won: ${score.GamesWon} Games lost: ${score.GamesLost}`;
+        score.player = 0;
+        score.computer = 0;
+        currentScore.textContent = 
+        `Current Score: ${score.player} - ${score.computer}`;
     }
-    let score = `Final Score: Player: ${playerScore} Computer: ${computerScore}.`;
-    return `${winner} ${score}`
+    choices.textContent = `You played ${pChoice} against ${cChoice}!`
+    results.appendChild(choices);
 }
+
+function playRound(e) {
+    const choices = ['rock', 'paper', 'scissors'];
+    let result = null;
+    let pChoice = e.target.id;
+    let cChoice = choices[Math.floor(Math.random() * choices.length)]
+    
+    if (!choices.includes(pChoice)) return;
+
+    if (pChoice === cChoice) result = 'tie';
+    else if (pChoice === 'rock' && cChoice === 'scissors' ||
+            pChoice === 'paper' && cChoice === 'rock' ||
+            pChoice === 'scissors' && cChoice === 'paper') {
+                ++score.player
+                result = 'win';
+            }
+    else {
+        ++score.computer;
+        result = 'loss';   
+    }
+    results.innerHTML = ''
+    displayResults(result, pChoice, cChoice);
+};
+
+buttons.forEach(button => addEventListener('click', playRound));
+
